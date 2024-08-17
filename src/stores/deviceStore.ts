@@ -35,7 +35,7 @@ const useDeviceStore = create<State & Action>()((set) => ({
   }),
   resetDeviceState: () => set((
     {
-      speed: 100,
+      speed: 0,
       // pwm: 0,
     }
   )),
