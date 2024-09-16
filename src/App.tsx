@@ -5,6 +5,7 @@ import Footer from './components/common/Footer'
 import toast, { Toaster } from 'react-hot-toast'
 import useWebSerial from './hooks/useWebSerial'
 import useDeviceStore from './stores/deviceStore'
+import { throttle } from 'lodash'
 
 let connectStatusToastId = ''
 
@@ -85,11 +86,17 @@ const App = () => {
     }
   }, [isConnected])
 
+  // pwm 更新节流
+  const throttledSendPwmUpdate = useCallback(
+    throttle((pwmValue: number) => send(new Uint8Array([pwmValue])), 200),
+    []
+  )
+
   // 发送 pwm 更新指令
   useEffect(() => {
     if (!isConnected) return
-    send(new Uint8Array([pwm]))
-  }, [pwm])
+    throttledSendPwmUpdate(pwm)
+  }, [pwm, throttledSendPwmUpdate])
 
   // 连接状态 Toast
   useEffect(() => {
