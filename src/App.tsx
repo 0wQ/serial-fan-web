@@ -29,6 +29,7 @@ const makeToast = {
 
 const App = () => {
   const pwm = useDeviceStore(state => state.pwm)
+  const setPwmReceived = useDeviceStore(state => state.setPwmReceived)
   const setSpeed = useDeviceStore(state => state.setSpeed)
   const resetDeviceState = useDeviceStore(state => state.resetDeviceState)
   const setIsDeviceConnected = useDeviceStore(state => state.setIsDeviceConnected)
@@ -53,18 +54,16 @@ const App = () => {
     let newlineIndex
     while ((newlineIndex = serialDataBufferRef.current.indexOf('\r\n')) !== -1) {
       const line = serialDataBufferRef.current.substring(0, newlineIndex)
-
-      console.log('speed:', line)
-
-      // 将字符串转换为数字
-      const num = parseInt(line, 10)
-      if (!isNaN(num)) {
-        setSpeed(num)
-        addSerialDataHistory(num.toString())
-      }
-
-      // 更新缓存，移除已经处理的数据
       serialDataBufferRef.current = serialDataBufferRef.current.substring(newlineIndex + 2)
+
+      let [rpm, pwm] = line.split(',').map(i => parseInt(i, 10))
+      if (!isNaN(rpm)) {
+        setSpeed(rpm)
+        addSerialDataHistory(rpm.toString())
+      }
+      if (!isNaN(pwm)) {
+        setPwmReceived(pwm)
+      }
     }
   }
 
@@ -124,7 +123,7 @@ const App = () => {
 
   return (
     <>
-      <div className="app bg-base-200 w-full min-h-[100vh] min-h-[100dvh] grid grid-rows-[auto,1fr,auto]">
+      <div className="app bg-base-200 w-full min-h-[100vh] grid grid-rows-[auto,1fr,auto]">
         <Header isConnected={isConnected} onConnectBtnClick={handleConnectBtnClick} />
         <Layout isAvailable={isAvailable} />
         <Footer />

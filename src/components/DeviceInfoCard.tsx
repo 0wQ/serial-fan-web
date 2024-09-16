@@ -28,9 +28,9 @@ const splitNumber = (num: number) => {
 const forceHideMask = false
 
 const Card = ({ className }: Props) => {
-  // const deviceVersion = 1
   const isDeviceConnected = useDeviceStore(state => state.isDeviceConnected)
   const speed = useDeviceStore(state => state.speed)
+  const pwmReceived = useDeviceStore(state => state.pwmReceived)
 
   return (
     <section className={clsx('', className)}>
@@ -42,23 +42,7 @@ const Card = ({ className }: Props) => {
 
           <div className="stats stats-vertical sm:stats-horizontal w-full relative">
 
-            {/* <div className="stat">
-              <div className="stat-figure text-secondary">
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" className="inline-block w-8 h-8 stroke-current"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-              </div>
-              <div className="stat-title">Firmware Version</div>
-              <div className="stat-value text-secondary font-mono"></div>
-              <div className="stat-value text-secondary countdown font-mono">
-                V
-                {
-                  splitNumber(deviceVersion).map((num, index) => (
-                    <span key={index} style={{ '--value': num } as React.CSSProperties}></span>
-                  ))
-                }
-              </div>
-            </div> */}
-
-            <div className="stat max-w-md mx-auto">
+            <div className="stat  mx-auto">
               <div className="stat-figure text-primary">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" className="inline-block h-8 w-8 stroke-current"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
               </div>
@@ -66,6 +50,20 @@ const Card = ({ className }: Props) => {
               <div className="stat-value text-primary countdown font-mono">
                 {
                   splitNumber(speed).map((num, index) => (
+                    <span key={index} style={{ '--value': num } as React.CSSProperties}></span>
+                  ))
+                }
+              </div>
+            </div>
+
+            <div className="stat mx-auto">
+              <div className="stat-figure text-primary">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" className="inline-block h-8 w-8 stroke-current"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+              </div>
+              <div className="stat-title">PWM Value</div>
+              <div className="stat-value text-primary countdown font-mono">
+                {
+                  splitNumber(pwmReceived).map((num, index) => (
                     <span key={index} style={{ '--value': num } as React.CSSProperties}></span>
                   ))
                 }
